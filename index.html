@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AS CONSTRIX - إدارة الإنشاءات والتشطيبات">
+  <title>AS CONSTRIX</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<section id="loginView" class="login-screen">
+  <div class="login-card">
+    <div class="login-photo">
+      <h2>AS CONSTRIX</h2>
+      <p>نبني المستقبل بإتقان</p>
+    </div>
+
+    <h1>تسجيل الدخول</h1>
+    <p>مرحباً بك في نظام إدارة الشركة</p>
+
+    <form id="loginForm">
+      <label>اسم المستخدم</label>
+      <input id="username" required placeholder="اسم المستخدم">
+
+      <label>كلمة المرور</label>
+      <input id="password" type="password" required placeholder="كلمة المرور">
+
+      <button class="btn primary full">دخول</button>
+      <p id="loginError" class="error"></p>
+    </form>
+
+    
+  </div>
+</section>
+
+<div id="appView" class="app hidden">
+
+  <aside class="sidebar">
+    <div class="side-logo">
+      <div class="logo-icon">AS</div>
+      <div>
+        <strong>AS CONSTRIX</strong>
+        <small>إدارة المشروعات</small>
+      </div>
+    </div>
+
+    <nav>
+      <button class="nav-link active" data-page="overview">🏠 الرئيسية</button>
+      <button class="nav-link" data-page="items">🏗️ بنود التشطيب</button>
+      <button class="nav-link" data-page="customers">👥 العملاء</button>
+      <button class="nav-link owner-only hidden" data-page="team">👨‍💼 المستخدمون</button>
+      <button class="nav-link owner-only hidden" data-page="settings">⚙️ الإعدادات</button>
+    </nav>
+
+    <button id="logoutBtn" class="logout">تسجيل الخروج ↪</button>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <small>نظام إدارة الشركة</small>
+        <h1 id="pageTitle">الرئيسية</h1>
+      </div>
+      <div class="profile">
+        <span class="avatar">AS</span>
+        <div>
+          <strong id="currentUser"></strong>
+          <small id="currentRole"></small>
+        </div>
+      </div>
+    </header>
+
+    <!-- الرئيسية -->
+    <section id="overviewPage" class="page">
+      <div class="hero">
+        <div>
+          <span>AS CONSTRIX</span>
+          <h2>كل مشروع يبدأ بتخطيط مضبوط</h2>
+          <p>إدارة المشروعات والتشطيبات في مكان واحد.</p>
+        </div>
+        <div class="hero-logo">AS</div>
+      </div>
+
+      <div class="stats">
+        <article class="stat">
+          <span>إجمالي البنود</span>
+          <strong id="totalItems">0</strong>
+        </article>
+        <article class="stat">
+          <span>العملاء</span>
+          <strong id="totalCustomers">0</strong>
+        </article>
+        <article class="stat">
+          <span>البنود قيد التنفيذ</span>
+          <strong id="activeItems">0</strong>
+        </article>
+      </div>
+
+      <article class="panel">
+        <h3>أحدث البنود</h3>
+        <div id="recentItems"></div>
+      </article>
+    </section>
+
+    <!-- بنود التشطيب -->
+    <section id="itemsPage" class="page hidden">
+      <article class="panel">
+        <h3>صور بنود التشطيب</h3>
+        <div id="itemsGallery" class="items-gallery"></div>
+      </article>
+
+      <article class="panel">
+        <h3>إضافة بند جديد</h3>
+        <form id="itemForm" class="form-grid">
+          <div>
+            <label>اسم البند</label>
+            <input id="itemName" required placeholder="اسم البند">
+          </div>
+          <div>
+            <label>التصنيف</label>
+            <input id="itemCategory" required placeholder="مثال: سباكة">
+          </div>
+          <div>
+            <label>رابط الصورة</label>
+            <input id="itemImage" type="url" placeholder="رابط الصورة">
+          </div>
+          <div>
+            <label>الحالة</label>
+            <select id="itemStatus">
+              <option>قيد التنفيذ</option>
+              <option>لم يبدأ</option>
+              <option>مكتمل</option>
+            </select>
+          </div>
+          <button class="btn primary">إضافة البند</button>
+        </form>
+      </article>
+
+      <article class="panel">
+        <h3>جدول البنود</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>اسم البند</th>
+                <th>التصنيف</th>
+                <th>الحالة</th>
+                <th>المسؤول</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="itemsTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- العملاء -->
+    <section id="customersPage" class="page hidden">
+      <article class="panel">
+        <h3>إحصائيات العملاء</h3>
+        <div class="stats customer-stats">
+          <article class="stat">
+            <span>إجمالي العملاء</span>
+            <strong id="customerCount">0</strong>
+          </article>
+          <article class="stat">
+            <span>مشروعات جارية</span>
+            <strong id="customerActive">0</strong>
+          </article>
+        </div>
+      </article>
+
+      <article class="panel">
+        <h3 id="customerFormTitle">إضافة عميل جديد</h3>
+        <form id="customerForm" class="form-grid">
+          <input type="hidden" id="customerId">
+
+          <div>
+            <label>اسم العميل</label>
+            <input id="customerName" required placeholder="اسم العميل">
+          </div>
+          <div>
+            <label>رقم الهاتف</label>
+            <input id="customerPhone" type="tel" required placeholder="رقم الهاتف">
+          </div>
+          <div>
+            <label>عنوان المشروع</label>
+            <input id="customerAddress" placeholder="العنوان">
+          </div>
+          <div>
+            <label>نوع المشروع</label>
+            <input id="customerProject" required placeholder="نوع التشطيب">
+          </div>
+          <div>
+            <label>حالة المشروع</label>
+            <select id="customerStatus">
+              <option>قيد التنفيذ</option>
+              <option>لم يبدأ</option>
+              <option>مكتمل</option>
+            </select>
+          </div>
+          <div>
+            <label>ملاحظات</label>
+            <input id="customerNotes" placeholder="ملاحظات">
+          </div>
+
+          <div class="form-actions">
+            <button id="customerSubmit" class="btn primary">إضافة العميل</button>
+            <button id="cancelEdit" class="btn outline hidden" type="button">إلغاء</button>
+          </div>
+        </form>
+      </article>
+
+      <article class="panel">
+        <h3>قائمة العملاء</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>العنوان</th>
+                <th>المشروع</th>
+                <th>الحالة</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="customersTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- المستخدمون -->
+    <section id="teamPage" class="page hidden">
+      <article class="panel">
+        <h3>المستخدمون والصلاحيات</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>المستخدم</th>
+                <th>الاسم</th>
+                <th>الدور</th>
+                <th>الصلاحيات</th>
+              </tr>
+            </thead>
+            <tbody id="teamTable"></tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <!-- الإعدادات -->
+    <section id="settingsPage" class="page hidden">
+      <article class="panel">
+        <h3>روابط التواصل الاجتماعي</h3>
+        <form id="settingsForm" class="settings-form">
+          <label>فيسبوك
+            <input id="facebook" type="url" placeholder="رابط فيسبوك">
+          </label>
+          <label>إنستجرام
+            <input id="instagram" type="url" placeholder="رابط إنستجرام">
+          </label>
+          <label>واتساب
+            <input id="whatsapp" type="url" placeholder="رابط واتساب">
+          </label>
+          <button class="btn primary">حفظ الإعدادات</button>
+          <p id="settingsMessage"></p>
+        </form>
+        <div id="socialPreview"></div>
+      </article>
+    </section>
+
+    <footer>© <span id="year"></span> AS CONSTRIX</footer>
+  </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
